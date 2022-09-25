@@ -2,5 +2,7 @@ from faker import Faker
 
 fake = Faker()
 
-for _ in range(10):
-    print(fake.first_name())
+print(
+    f"Hello, my name is {fake.name()}!\nI was born {fake.date()}.\n"
+    f"I live at {fake.address()}.\nHave a nice day!"
+)
