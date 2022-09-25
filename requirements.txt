@@ -1,0 +1,16 @@
+# For name generator
+faker==14.2.1
+
+# For unique IDs
+ulid-py==1.1.0
+
+# [code_style]-[BEGIN]
+# Pre-commit hook.
+pre-commit==2.20.0
+# Upgrade syntax.
+pyupgrade==2.38.0
+# Formatter. Apply codestyle.
+black==22.8.0
+# Check codestyle
+flake8==5.0.4
+# [code_style]-[END]
