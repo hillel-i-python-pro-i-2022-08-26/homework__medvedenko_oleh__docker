@@ -1,5 +1,5 @@
 # For name generator
-faker==14.2.1
+faker==15.0.0
 
 # For unique IDs
 ulid-py==1.1.0
