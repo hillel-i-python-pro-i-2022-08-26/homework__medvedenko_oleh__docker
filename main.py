@@ -74,7 +74,7 @@ def get_formatted_output(data: dict) -> str:
 
     return "\n".join(
         [
-            f'Company "{group}" has {len(names)} workers: {", ".join(names)}\n'
+            f'Company "{group}" has {len(names)} workers: {", ".join(names)}'
             for group, names in data.items()
         ]
     )
