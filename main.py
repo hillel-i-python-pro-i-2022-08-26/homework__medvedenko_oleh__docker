@@ -1,5 +1,4 @@
 import random
-from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import TypeAlias, TypedDict
 
@@ -22,8 +21,8 @@ class DataProvider:
     _faker: Faker = field(default_factory=Faker)
 
     def _generate_group_names(
-        self,
-        amount: int = 10,
+            self,
+            amount: int = 10,
     ) -> T_GROUP_NAMES:
         return [self._faker.unique.company() for _ in range(amount)]
 
@@ -34,7 +33,7 @@ class DataProvider:
         )
 
     def _generate_humans(
-        self, groups: T_GROUP_NAMES, amount_of_humans: int
+            self, groups: T_GROUP_NAMES, amount_of_humans: int
     ) -> T_HUMANS:
         members = []
         for _ in range(amount_of_humans):
@@ -45,9 +44,9 @@ class DataProvider:
         return members
 
     def generate_group_members(
-        self,
-        amount_of_groups: None | int = None,
-        amount_of_humans: None | int = None,
+            self,
+            amount_of_groups: None | int = None,
+            amount_of_humans: None | int = None,
     ) -> T_HUMANS:
         amount_of_groups = amount_of_groups or random.randint(5, 10)
         amount_of_humans = amount_of_humans or random.randint(3, 30)
@@ -56,25 +55,18 @@ class DataProvider:
         return self._generate_humans(groups=_groups, amount_of_humans=amount_of_humans)
 
 
-def organize_data(humans: T_HUMANS) -> dict[str:list]:
-    """
-    Organize data in way, useful for further processing.
-    At this stage not allowed to make output string.
-    """
-    names_in_groups = defaultdict(list)
+def organize_data(humans: T_HUMANS) -> dict[str: list[str]]:
+    names_in_groups = {}
     for i in humans:
-        names_in_groups[i["group"]].append(i["name"])
+        names_in_groups.setdefault(i["group"], []).append(i["name"])
     return names_in_groups
 
 
 def get_formatted_output(data: dict) -> str:
-    """
-    Get output string. That can be used to print in console.
-    """
-
     return "\n".join(
         [
-            f'Company "{group}" has {len(names)} workers: {", ".join(names)}'
+            f"Company: {group} | Workers: {names}\n"
+            f"Total number of workers: {len(names)}"
             for group, names in data.items()
         ]
     )
