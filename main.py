@@ -65,7 +65,7 @@ def organize_data(humans: T_HUMANS) -> dict[str, list[str]]:
 def get_formatted_output(data: dict) -> str:
     return "\n".join(
         [
-            f'Company "{group}" has {len(names)} workers: {", ".join(names)}'
+            f'Company "{group}" has {len(names)} worker(s): {", ".join(names)}'
             for group, names in data.items()
         ]
     )
