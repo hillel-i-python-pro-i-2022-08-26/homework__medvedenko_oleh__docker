@@ -65,8 +65,10 @@ def organize_data(humans: T_HUMANS) -> dict[str, list[str]]:
 def get_formatted_output(data: dict) -> str:
     return "\n".join(
         [
-            f'Company "{group}" has {len(names)} worker(s): {", ".join(names)}'
-            for group, names in data.items()
+            f'Company "{group}" has {len(names)} worker: {", ".join(names)}'
+            for group, names in data.items() if len(names) == 1 or
+            f'Company "{group}" has {len(names)} workers: {", ".join(names)}'
+            if len(names) >= 1
         ]
     )
 
