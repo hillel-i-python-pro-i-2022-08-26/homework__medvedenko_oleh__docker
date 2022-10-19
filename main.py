@@ -55,7 +55,7 @@ class DataProvider:
         return self._generate_humans(groups=_groups, amount_of_humans=amount_of_humans)
 
 
-def organize_data(humans: T_HUMANS) -> dict[str : list[str]]:
+def organize_data(humans: T_HUMANS) -> dict[str, list[str]]:
     names_in_groups = {}
     for i in humans:
         names_in_groups.setdefault(i["group"], []).append(i["name"])
@@ -65,8 +65,7 @@ def organize_data(humans: T_HUMANS) -> dict[str : list[str]]:
 def get_formatted_output(data: dict) -> str:
     return "\n".join(
         [
-            f"Company: {group} | Workers: {names}\n"
-            f"Total number of workers: {len(names)}"
+            f'Company "{group}" has {len(names)} workers: {", ".join(names)}'
             for group, names in data.items()
         ]
     )
