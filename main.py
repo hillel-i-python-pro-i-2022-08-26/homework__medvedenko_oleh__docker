@@ -21,8 +21,8 @@ class DataProvider:
     _faker: Faker = field(default_factory=Faker)
 
     def _generate_group_names(
-        self,
-        amount: int = 10,
+            self,
+            amount: int = 10,
     ) -> T_GROUP_NAMES:
         return [self._faker.unique.company() for _ in range(amount)]
 
@@ -33,7 +33,7 @@ class DataProvider:
         )
 
     def _generate_humans(
-        self, groups: T_GROUP_NAMES, amount_of_humans: int
+            self, groups: T_GROUP_NAMES, amount_of_humans: int
     ) -> T_HUMANS:
         members = []
         for _ in range(amount_of_humans):
@@ -44,9 +44,9 @@ class DataProvider:
         return members
 
     def generate_group_members(
-        self,
-        amount_of_groups: None | int = None,
-        amount_of_humans: None | int = None,
+            self,
+            amount_of_groups: None | int = None,
+            amount_of_humans: None | int = None,
     ) -> T_HUMANS:
         amount_of_groups = amount_of_groups or random.randint(5, 10)
         amount_of_humans = amount_of_humans or random.randint(3, 30)
@@ -66,9 +66,12 @@ def get_formatted_output(data: dict) -> str:
     return "\n".join(
         [
             f'Company "{group}" has {len(names)} worker: {", ".join(names)}'
-            for group, names in data.items() if len(names) == 1 or
+            for group, names in data.items() if len(names) == 1
+        ]
+        +
+        [
             f'Company "{group}" has {len(names)} workers: {", ".join(names)}'
-            if len(names) >= 1
+            for group, names in data.items() if len(names) > 1
         ]
     )
 
