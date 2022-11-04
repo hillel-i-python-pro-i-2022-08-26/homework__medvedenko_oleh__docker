@@ -36,8 +36,8 @@ def generate_users(amount: int) -> Iterator[User]:
     while len(logins) < amount:
         logins.add(fake.user_name())
     passwords: set[str] = {fake.password() for _ in logins}
-    log.info(f"Generated {len(logins)} logins")
-    log.info(f"Generated {len(passwords)} passwords")
+    log.info(f"Generated {len(logins)} logins.")
+    log.info(f"Generated {len(passwords)} passwords.")
     for login, password in zip(logins, passwords):
         yield User(login=login, password=password)
 
