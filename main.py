@@ -43,7 +43,7 @@ def generate_users(amount: int) -> Iterator[User]:
 
 
 def main():
-    amount = 200_000
+    amount = 100_000
     users = list(generate_users(amount=amount))
     validate(users=users, amount=amount)
 
