@@ -1,85 +1,51 @@
-import random
-from dataclasses import dataclass, field
-from typing import TypeAlias, TypedDict
-
+import logging
+from typing import Iterator, Protocol, TypeAlias
 from faker import Faker
 
-T_GROUP_NAME: TypeAlias = str
-T_GROUP_NAMES: TypeAlias = list[T_GROUP_NAME]
+fake = Faker()
+
+T_LOGIN: TypeAlias = str
+T_PASSWORD: TypeAlias = str
+
+log = logging.getLogger()
+logging.basicConfig(level=logging.DEBUG)
 
 
-class Human(TypedDict):
-    name: str
-    group: T_GROUP_NAME
+class User:
+    def __init__(self, login, password):
+        self.login = login
+        self.password = password
 
 
-T_HUMANS: TypeAlias = list[Human]
+class UserProtocol(Protocol):
+    login: T_LOGIN
+    password: T_PASSWORD
 
 
-@dataclass
-class DataProvider:
-    _faker: Faker = field(default_factory=Faker)
-
-    def _generate_group_names(
-        self,
-        amount: int = 10,
-    ) -> T_GROUP_NAMES:
-        return [self._faker.unique.company() for _ in range(amount)]
-
-    def _generate_human(self, group_name: T_GROUP_NAME) -> Human:
-        return Human(
-            name=self._faker.unique.first_name(),
-            group=group_name,
+def validate(users: list[UserProtocol], amount: int) -> None:
+    logins = set(map(lambda user: user.login, users))
+    if amount != (amount_of_logins := len(logins)):
+        raise ValueError(
+            f'Not enough of unique items. Required: "{amount}". Provided: "{amount_of_logins}"'
         )
-
-    def _generate_humans(
-        self, groups: T_GROUP_NAMES, amount_of_humans: int
-    ) -> T_HUMANS:
-        members = []
-        for _ in range(amount_of_humans):
-            group_name = random.choice(groups)
-            group_member = self._generate_human(group_name=group_name)
-            members.append(group_member)
-
-        return members
-
-    def generate_group_members(
-        self,
-        amount_of_groups: None | int = None,
-        amount_of_humans: None | int = None,
-    ) -> T_HUMANS:
-        amount_of_groups = amount_of_groups or random.randint(5, 10)
-        amount_of_humans = amount_of_humans or random.randint(3, 30)
-
-        _groups = self._generate_group_names(amount=amount_of_groups)
-        return self._generate_humans(groups=_groups, amount_of_humans=amount_of_humans)
+    return log.info(f"Successfully generated {amount_of_logins} unique users.")
 
 
-def organize_data(humans: T_HUMANS) -> dict[str, list[str]]:
-    names_in_groups = {}
-    for i in humans:
-        names_in_groups.setdefault(i["group"], []).append(i["name"])
-    return names_in_groups
-
-
-def get_formatted_output(data: dict) -> str:
-    return "\n".join(
-        [
-            f'Company "{group}" has {len(names)} workers: {", ".join(names)}'
-            for group, names in data.items()
-        ]
-    )
+def generate_users(amount: int) -> Iterator[User]:
+    logins: set[str] = set()
+    while len(logins) < amount:
+        logins.add(fake.user_name())
+    passwords: list[str] = [fake.password() for _ in logins]
+    log.info(f"Generated {len(logins)} logins.")
+    log.info(f"Generated {len(passwords)} passwords.")
+    for login, password in zip(logins, passwords):
+        yield User(login=login, password=password)
 
 
 def main():
-    """
-    You have a list of humans. Every human have "name" and "group".
-    Your task is to show all groups, with amount and names of members of each group.
-    """
-    group_members = DataProvider().generate_group_members()
-    organized_data = organize_data(humans=group_members)
-    output = get_formatted_output(data=organized_data)
-    print(output)
+    amount = 200_000
+    users = list(generate_users(amount=amount))
+    validate(users=users, amount=amount)
 
 
 if __name__ == "__main__":
