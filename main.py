@@ -28,14 +28,14 @@ def validate(users: list[UserProtocol], amount: int) -> None:
         raise ValueError(
             f'Not enough of unique items. Required: "{amount}". Provided: "{amount_of_logins}"'
         )
-    return log.info(f"Successfully generated {len(logins)} unique users.")
+    return log.info(f"Successfully generated {amount_of_logins} unique users.")
 
 
 def generate_users(amount: int) -> Iterator[User]:
     logins: set[str] = set()
     while len(logins) < amount:
         logins.add(fake.user_name())
-    passwords: set[str] = {fake.password() for _ in logins}
+    passwords: list[str] = [fake.password() for _ in logins]
     log.info(f"Generated {len(logins)} logins.")
     log.info(f"Generated {len(passwords)} passwords.")
     for login, password in zip(logins, passwords):
@@ -43,7 +43,7 @@ def generate_users(amount: int) -> Iterator[User]:
 
 
 def main():
-    amount = 100_000
+    amount = 200_000
     users = list(generate_users(amount=amount))
     validate(users=users, amount=amount)
 
